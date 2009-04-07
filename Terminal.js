@@ -50,7 +50,6 @@
 //   Handle multi-line responses correctly.
 //   Let everything be wrapped in <p></p> if they want that, rather than just using <br/> tags.
 //   If style includes color, does that work? Maybe not, need to apply that style to the whole hierarchy of divs.
-//   Fix strange behavior when you paste text in. I think this is because it's assuming it's getting a keyboard event for every character.
 
 var com;
 if (!com) {com = {};}

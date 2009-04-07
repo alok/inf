@@ -46,6 +46,8 @@ Type an expression at the : prompt and hit Enter. For more documentation, scroll
     }
   </script>
 
+<!-- <div style="height:300px; overflow:auto; background : #d8e8ff;"> -->
+<div>
 <h2>About Inf</h2>
 
 <h3>Basic use</h3>
@@ -57,7 +59,7 @@ Inf is a calculator that can handle infinite and infinitesimal numbers.
 Special constants and variables:
 </p>
 <ul>
-<li> d -- an infinitesimally small number
+<li> d -- an infinitesimally small positive number
 <li> pi -- the ratio of a circle's circumference to its diameter
 <li> i -- the square root of -1
 </ul>
@@ -89,38 +91,87 @@ infinitesimals, and now that modern mathematicians have put them on a more rigor
 no reason to shy away from them.
 To learn more about the application of infinitesimals
 to calculus, see my <a href="http://www.lightandmatter.com/calc/">free calculus book</a>.
-If you've ended up here because the calculus book tells you about the calculator, one thing you should realize is that the Levi-Civita
+(If you've ended up here because the calculus book tells you about the calculator, one thing you should realize is that the Levi-Civita
 numbers used by Inf are not the full hyperreal number system referred to in the book. They are a subset of them, in the same way
 that the rational numbers are a subset of the real numbers. This is why certain calculations give an error
-in the calculator, even though they are well defined in the hyperreals.
+in the calculator, even though they are well defined in the hyperreals.)
 </p>
 <p>
-The Levi-Civita numbers obey all the same <a href="http://en.wikipedia.org/wiki/First-order_logic">elementary</a> axioms of arithmetic as the real numbers.
-If you try evaluating the expression 1/0, you'll see that it comes up as undefined, not an infinite number. This is because one of the elementary
-axioms of arithmetic is that division by zero is undefined. To get an infinite result, you could do something like 1/d, where d is the symbol
-built in to the calculator to represent one particular infinitesimal number. Another thing that
-can be proved from the elementary axioms of arithmetic is that if x is greater than zero, then 2x is greater than x. This applies to
-Levi-Civita numbers as well, so infinite and infinitesimal numbers have to come in different sizes. In particular, there isn't
-anything in the Levi-Civita system that plays the role of &infin;, which is usually used as a generic symbol for infinity.
+There are two basic things to understand about this system:
 </p>
+<ol>
+<li> The Levi-Civita numbers obey all the same <a href="http://en.wikipedia.org/wiki/First-order_logic">elementary</a> axioms of arithmetic as the real numbers.
+<li> The system contains many different sizes of infinite numbers, and many sizes of
+infinitesimals, but all of them are expressed in terms of the basic building block d, which is a positive infinitesimal that we arbitrarily
+single out and give a name.
+</ol>
 <p>
 Here are some examples you can try in the calculator to get a feeling for how all this works:
 </p>
 <ul>
+<li> d>0 ... true, because although d is infinitesimal, it's still greater than zero
+<li> d&lt;10^-10 ... true, because d is smaller than any positive real number
 <li> 1/0 ... undefined
-<li> d>0 ... true
-<li> d&lt;10^-10 ... true, because in fact d is smaller than any positive real number
+</ul>
+<p>
+The expression 1/0 comes up as undefined, not an infinite number. This is because one of the elementary
+axioms of arithmetic is that division by zero is undefined. To get an infinite result, you could do something like 1/d, where d is the symbol
+built in to the calculator to represent one particular infinitesimal number.
+</p>
+<ul>
+<li> 1/d ... doesn't cause an error like 1/0 did
+<li> 1/d>1000000 ... true, because 1/d is infinite
 <li> d^2&lt;d ... true, showing that we have different sizes of infinitesimals
-<li> d^2&gt;0 ... true, because even though d^2 is infinitesimally small compared to d, it's still no zero
-<li> sqrt(d)
 <li> sqrt(d)>d ... true
-<li> 1/d ... gives an infinite result
-<li> 2/d>1/d ... true, because 2/d is a bigger infinity than 1/d
-<li> 2/d+1>2/d ... and an even bigger infinity
+</ul>
+<p>
+To see why there have to be many different sizes of infinities, and of infinitesimals, consider the following example. We can
+prove from the elementary axioms of arithmetic is that if x is greater than zero, then 2x is greater than x. This applies to
+Levi-Civita numbers as well, so infinite and infinitesimal numbers have to come in different sizes. In particular, there isn't
+anything in the Levi-Civita system that plays the role of &infin;, which is usually used as a generic symbol for infinity.
+</p>
+<ul>
+<li> d^2&gt;0 ... true, because even though d^2 is infinitesimally small compared to d, it's still not zero
+</ul>
+<p>
+This shows that the traditional practice of neglecting the square of an infinitesimal can't be formalized in the Levi-Civita system simply by
+equating it to zero. We can, however, say that neglecting a d<sup>2</sup> term compared to a d is an infinitely good approximation. Here is an example
+of numerical calculus, in which we calculate the  derivative of x<sup>4</sup>, evaluated at x=2:
+</p>
+<ul>
+<li> [(2+d)^4-2^4]/d
+</ul>
+<p>
+The result is 32+(24)d+8d<sup>2</sup>+d<sup>3</sup>, corresponding to the fact  that the derivative is 32.
+The right way to handle this is not to say that the trailing terms are zero, but simply to define the derivative as the <i>standard part</i>
+of the quotient dy/dx, meaning its leading term that has no d in it.
+</p>
+<ul>
 <li> 1/(1-d) ... is calculated using the <a href="http://en.wikipedia.org/wiki/Geometric_series">geometric series</a>, up to a certain level of precision
 <li> exp(d) ... is calculated using a <a href="http://en.wikipedia.org/wiki/Taylor_series">Taylor series</a>
-<li> exp(1/d) ... is undefined in the Levi-Civita system
+<li> (1-cos d)/d ... gives an infinitesimal result, which is equivalent to the statement that lim<sub>x&rarr;0</sub>[(1-cos d)/d]=0, as can be verified by L'H&ocirc;pital's rule
 </ul>
+For convenience in the following, let's define an infinite variable h.
+<ul>
+<li> h=1/d
+<li> h ... spits back its representation in terms of the basic building block d
+<li> 2*h>h ... true, because 2h is a bigger infinity than h
+<li> 2*h+1>2*h ... and an even bigger infinity
+<li> sqrt(h+1)-sqrt(h-1) ... shows that this expression is (perhaps counterintuitively) infinitesimal
+<li> exp(h) ... is undefined in the Levi-Civita system
+</ul>
+<p>
+To amplify on statement 2 above, the infinitesimal
+d doesn't have any special properties that would allow it to be picked out from among all the other positive infinitesimals. We just assume
+it can be picked arbitrarily from the set of positive infinitesimals. The arbitrariness of this choice can be understood by analogy with
+the complex numbers. To construct the complex numbers, we start by assuming that a solution to the equation x<sup>2</sup>+1=0 exists.
+It follows from the axioms of algebra that there are two such solutions with opposite signs, since the sign of x doesn't affect the value of x<sup>2</sup>.
+We call one of these i, and the other -i. Note that it makes absolutely no difference which one is i and which is -i. Similarly in the case
+of the Levi-Civita numbers, we assume that a positive solution exists to the infinite set of simultaneous equations {x<1, x<1/2, x<1/3, ...}.
+Assuming such a solution, which is interpreted as an infinitesimal number, it follows that we can find
+many other solutions as we like. Out of all the
+solutions, we arbitrarily pick one and call it d.
+</p>
 <p>
 The undefined result for exp(1/d) is an example of how the Levi-Civita numbers are a smaller system than the hyperreals,
 which were defined by Abraham Robinson around 1960. The hyperreals match the properties of the real numbers even better than the Levi-Civita numbers do.
@@ -173,5 +224,7 @@ URL. Alternatively, you can access it via a web browser or git, at <a href="http
 <p>
 <a href="?test">This link</a> runs a test suite in your browser.
 </p>
+</div>
+
 </body>
 </html>
