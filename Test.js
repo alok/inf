@@ -53,6 +53,7 @@ com.lightandmatter.Test =
                        ["(1+d)^pi"],
                        ["d^pi",null],
                        ["[sqrt(d+d^2)]^2","d+d^2"],
+                       ["d/0",null],
                        // "foo",
                        // "2d",  // the parser doesn't return anything for this line
                        [] // end of list

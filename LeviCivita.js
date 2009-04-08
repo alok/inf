@@ -21,6 +21,7 @@ com.lightandmatter.LeviCivita =
     if (arguments.length<3) {series = [[0,1]];}
     c.s = series; // array of pairs of the form [q,a_q]; q's can be Rational or integer, and a_q's can be real or complex; first pair must be [0,1]; must be sorted
                   // 0 is represented with front=0 and s=[[0,1]]
+                  // NaN is represented with front=NaN; can test with Num.is_invalid()
     c.mytype = 'l';
     c.rr = com.lightandmatter.Rational(1,1); // just need one handy to get access to class methods
     c.nn = com.lightandmatter.Num;           // ...similar
@@ -38,6 +39,7 @@ com.lightandmatter.LeviCivita =
       return com.lightandmatter.LeviCivita(0.0,0);
     };
     c.toString = function() {
+      if (c.nn.is_invalid(c)) {return '';}
       if (c.f===0) {return '0';}
       var l = [];
       for (var i=0; i<c.s.length && i<com.lightandmatter.LeviCivita.n_display; i++) {

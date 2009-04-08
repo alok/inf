@@ -78,7 +78,7 @@ com.lightandmatter.Num.binop = function(op,a,b,options) { // options arg is opti
         if (op==';') {
           return b;
         }
-        if (a===null || b===null) {return null;}
+        if (nn.is_invalid(a) || nn.is_invalid(b)) {return null;}
         if (op==',') {
           if (nn.num_type(a)=='a' && !closed_array) {
             a.push(b); // This has the side-effect of altering the lhs, but I think that's okay, because we won't retain any refs to it.
@@ -162,6 +162,15 @@ com.lightandmatter.Num.is_zero = function(c) {
       if (t=='l') {return c.f===0;}
     };
 
+com.lightandmatter.Num.is_invalid = function(c) {
+      if (c===null) {return true;}
+      var n = com.lightandmatter.Num;
+      var t = n.num_type(c);
+      if (t=='r') {return isNaN(c);}
+      if (t=='c' || t=='q') {return n.is_invalid(c.x) || n.is_invalid(c.y);}
+      if (t=='l') {return n.is_invalid(c.f);}
+    };
+
 com.lightandmatter.Num.is_real = function(c) {
       var t = com.lightandmatter.Num.num_type(c);
       if (t=='r') {return true;}
@@ -172,6 +181,7 @@ com.lightandmatter.Num.is_real = function(c) {
 
 com.lightandmatter.Num.convert_to_string = function(x) {
       var t = com.lightandmatter.Num.num_type(x);
+      var und = "undefined";
       if (t=='r') {
         s = x.toString();
         if (x!=Math.floor(x)) {
@@ -187,11 +197,13 @@ com.lightandmatter.Num.convert_to_string = function(x) {
           }
           catch(foo) {}
         }
-        s = s.replace(/NaN/,"undefined");
+        s = s.replace(/NaN/,und);
         return s;
       }
       else {
-        return x.toString();
+        var s = x.toString();
+        if (s==='') {s=und;} // happens, e.g., with undefined LC numbers
+        return s;
       }      
     };
 
