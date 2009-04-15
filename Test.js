@@ -54,6 +54,10 @@ com.lightandmatter.Test =
                        ["d^pi",null],
                        ["[sqrt(d+d^2)]^2","d+d^2"],
                        ["d/0",null],
+                       ["i/0",null],
+                       ["exp(ln(1+d))","1+d"],
+                       ["array(2^d)==[[0,1],[1,0.6931471805599453],[2,0.24022650695910075],[3,0.05550410866482159],[4,0.009618129107628489]]",true],
+                       ["array[(1+d)^(1/d)]==[[0,2.7182815255731914],[1,-1.359139384920635],[2,1.2458746693121687],[3,-1.1892381779100527],[4,1.1547785769400352]]",true],
                        // "foo",
                        // "2d",  // the parser doesn't return anything for this line
                        [] // end of list
@@ -134,7 +138,8 @@ com.lightandmatter.Test =
               }
             }
             if (test[1]===null) {
-              unequal = rx!==null && !(typeof(rx)=='number' && isNaN(rx));
+              //unequal = rx!==null && !(typeof(rx)=='number' && isNaN(rx));
+              unequal = rx!==null && !nn.is_invalid(rx);
             }
             if (typeof(test[1])=='boolean') {
               unequal = (rx!=test[1]);

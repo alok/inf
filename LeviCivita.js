@@ -142,6 +142,7 @@ com.lightandmatter.LeviCivita =
         }
       }
       z.tidy();
+      //c.debug('in mul, after tidy() z.s[0][0]='+z.s[0][0]);
       return z;
     };
     c.sq = function () {
@@ -160,9 +161,7 @@ com.lightandmatter.LeviCivita =
       for (var i=0; i<m; i++) {
         var term = c.nn.binop('*',t[i],pow);
         s = c.nn.binop('+',s,term);
-        //c.debug('term='+term+', s='+s+' pow='+pow+' c='+c+' ');
         if (i<m-1) {pow = c.nn.binop('*',pow,c);} // compute the next one, but only if this isn't the last one
-        //c.debug('pow='+pow+' ');
       }
       return s;
     };
@@ -205,10 +204,13 @@ com.lightandmatter.LeviCivita =
     };
     c.pow = function(b) { // b must be integer or Rational unless c.l==0
       if (c.nn.num_type(c)=='r' && isNaN(c)) {return NaN;}
-      //c.debug('c='+c+', b='+b);
       var bt = c.nn.num_type(b);
-      //c.debug('bt='+bt);
-      if (bt!='r' && bt!='q') {return NaN;}
+      if (bt!='r' && bt!='q' && bt!='l') {return NaN;}
+      if (bt=='l') {
+        // Both b and c are LC.
+        if (c.l!==0) {return NaN;}
+        return  c.nn.binop('*',b,c.ln()).exp();
+      }
       if (bt=='r') {
         if (c.f===0 && b===0) {return NaN;}
         if (b==Math.floor(b)) {return c.int_pow(b);} else {if (c.l!==0) {return NaN;}}
@@ -228,14 +230,14 @@ com.lightandmatter.LeviCivita =
       z.s = [[0,1]];
       return c.nn.binop('*',z,c.eps_part().expand(t));
     };
-    c.exp = function() { // I think it doesn't make sense if magnitude of c.f is not rational and c.l!=0
-        if (c.nn.binop('cmp',c.l,0)<0) {return NaN;}
+    c.exp = function() {
+        //c.debug('c='+c+' c.l='+c.l+' c.f='+c.f+' c.s[0][0]='+c.s[0][0]);
+        if (c.nn.binop('cmp',c.l,0)<0) {return NaN;} // can't do exp(d^-x)
         var ft = c.nn.num_type(c.f);
         var magf;
         if (ft=='r') {magf=Math.abs(c.f);}
         if (ft=='q' || ft=='c') {magf=c.f.abs();}
         var tmagf = c.nn.num_type(magf);
-        if (tmagf=='r' && magf!=Math.floor(magf) && !c.nn.is_zero(c.l)) {return NaN;}
         var argf = 1;
         var u = 1;
         if (ft=='c') {argf=c.f.arg(); u = com.lightandmatter.Complex(Math.cos(argf),Math.sin(argf));}
@@ -243,6 +245,15 @@ com.lightandmatter.LeviCivita =
         if (c.nn.binop('cmp',magf,1)!==0) {z.f=u; return z.exp().pow(magf);}
         // From now on, we're guaranteed that magf is 1.
         return z.expand(com.lightandmatter.LeviCivita.taylor.exp);
+    };
+    c.ln = function() {
+      if (c.nn.binop('cmp',c.l,0)!==0) {return NaN;}
+      var flog;
+      if (c.nn.num_type(c.f)=='r' && c.f<0) {c.f=com.lightandmatter.Complex(c.f,0);}
+      if (c.nn.num_type(c.f)=='r') {flog=Math.log(c.f);}
+      if (c.nn.num_type(c.f)=='c') {flog=c.f.ln();}
+      return c.nn.binop('+',flog,c.eps_part().expand(com.lightandmatter.LeviCivita.taylor.ln));
+      
     };
     c.cos = function() {
       var u = c.nn.binop('*',c,com.lightandmatter.Complex(0,1)).exp();
@@ -308,6 +319,14 @@ com.lightandmatter.LeviCivita =
         c.s[i][1] = c.nn.binop('/',c.s[i][1],k);
         if (c.nn.num_type(c.s[i][1])=='q') {c.s[i][1]=c.s[i][1].tidy();}
       }
+      if (c.s[0][0]!==0) {
+        var p = c.s[0][0];
+        c.l += p;
+        for (var i=0; i<c.s.length; i++) {
+          c.s[i][0] -= p;
+        }
+      }
+      //c.debug('in tidy() c.s[0][0]='+c.s[0][0]);
     };
 
     c.debug = function(s) {
@@ -336,6 +355,7 @@ com.lightandmatter.LeviCivita.generate_static_taylors = function () {
     x.taylor = {};
     x.taylor.inv = x.generate_taylor(function(){return 1;}); // 1/(1-x)
     x.taylor.exp = x.generate_taylor(function(i,l){if (i===0) {return 1;} else {return l/i;}}); // e^x
+    x.taylor.ln  = x.generate_taylor(function(i,l){if (i===0) {return 0;} if (i===1) {return 1;} else {var sign=-l/Math.abs(l); return sign/i;}}); // ln(1+x)
 };
 
 com.lightandmatter.LeviCivita.change_n = function (n) {

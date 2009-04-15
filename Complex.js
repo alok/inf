@@ -70,13 +70,15 @@ com.lightandmatter.Complex =
     c.ceil = function() {return com.lightandmatter.Complex(Math.ceil(c.x),Math.ceil(c.y));};
 
     c.toString = function() {
+      var nn = com.lightandmatter.Num;
+      if (nn.is_invalid(c)) {return '';}
       if (c.y===0) {return com.lightandmatter.Num.convert_to_string(c.x);}
       if (c.x===0) {
         if (c.y==1) {return 'i';}
         if (c.y== -1) {return '-i';}
-        return com.lightandmatter.Num.convert_to_string(c.y)+' i';
+        return nn.convert_to_string(c.y)+' i';
       }
-      return com.lightandmatter.Num.convert_to_string(c.x) + ' + ' + com.lightandmatter.Num.convert_to_string(c.y) + ' i';
+      return nn.convert_to_string(c.x) + ' + ' + com.lightandmatter.Num.convert_to_string(c.y) + ' i';
     };
 
     return c;
