@@ -1,4 +1,4 @@
-// Complex.js
+// Complex.js 
 // (c) 2009 B. Crowell and M. Khafateh, GPL 2 license
 //
 // This file provides a constructor, com.lightandmatter.Complex.
