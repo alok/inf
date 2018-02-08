@@ -3,6 +3,10 @@
 //
 // This file provides a constructor, com.lightandmatter.Parser.
 //
+// Summary:
+//          lexer.change_text(line);
+//          parser.parse(lexer.tokens,lexer.props);      // stores a parse tree in the parser object
+//          result = parser.tree_to_string(parser.tree); // computes the result; should try/catch errors here
 // Design:
 //    two types of operators: infix binary, prefix unary
 //    prefix unary (functions) have highest priority

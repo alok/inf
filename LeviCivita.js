@@ -202,7 +202,7 @@ com.lightandmatter.LeviCivita =
         var n = p-2*m; // may be 0 or 1
         return c.int_pow(m).sq().mul(c.int_pow(n));
     };
-    c.pow = function(b) { // b must be integer or Rational unless c.l==0
+    c.pow = function(b) { // compute c**b; b must be integer or Rational unless c.l==0
       if (c.nn.num_type(c)=='r' && isNaN(c)) {return NaN;}
       var bt = c.nn.num_type(b);
       if (bt!='r' && bt!='q' && bt!='l') {return NaN;}
@@ -222,10 +222,20 @@ com.lightandmatter.LeviCivita =
       if (bt=='r') {p=b;}
       if (bt=='q') {p=b.x/b.y;}
       // series = 1,p,p*(p-1)/2,p*(p-1)*(p-2)/6,...
+      //   i.e., Taylor series of y=x^p, evaluated around x=1
       var f = function(i,u) { if (i===0) { return 1; } else { return u*(p-i+1)/i; } };
       t = com.lightandmatter.LeviCivita.generate_taylor(f);
       var z = c.clone();
-      z.f = c.nn.binop('^',z.f,p);
+      // c.debug("debugging... z.f="+z.f+", type="+c.nn.num_type(z.f));
+      if (c.nn.num_type(z.f)=='r' && z.f<0) {
+        z.f=com.lightandmatter.Complex(z.f,0); // promote to complex
+        z.f = c.nn.binop('^',z.f,p);
+        if (Math.abs(z.f.x)<1.0e-15) {z.f.x=0;} // kludgy, get rid of small imaginary part
+      }
+      else {
+        z.f = c.nn.binop('^',z.f,p);
+      }
+      // c.debug("debugging... z.f="+z.f);
       if (!c.nn.is_zero(z.l)) {z.l = c.nn.binop('/',z.l,b.y);} // if z.l is nonzero, we're guaranteed that b is rational
       z.s = [[0,1]];
       return c.nn.binop('*',z,c.eps_part().expand(t));

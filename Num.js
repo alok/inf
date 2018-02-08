@@ -138,7 +138,13 @@ com.lightandmatter.Num.binop = function(op,a,b,options) { // options arg is opti
             return Math.pow(a,b);
           }
           else {
-            return a.pow(b);
+            if (t=='q') {
+              // com.lightandmatter.Num.debug("debugging in num.binop, a="+a+", b="+b+", t="+t+", b.toNumber()="+b.toNumber());
+              return Math.pow(a,b.toNumber());
+            }
+            else {
+              return a.pow(b);
+            }
           }
         }
         return null;

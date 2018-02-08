@@ -2,6 +2,7 @@
 // (c) 2007 B. Crowell and M. Khafateh, GPL 2 license
 //
 // This file provides a constructor, com.lightandmatter.Test.
+// To run these tests, invoke the calculator with a URL ending in ?test, or just click on the link at the bottom of the page.
 //
 // to do:
 //   fix the ones that actually fail
@@ -42,6 +43,8 @@ com.lightandmatter.Test =
                        ["zzz=1;zzz==1",true],   // nopromote flag
                        ["f x=x^2;f(f(2))",16], // composition of functions
                        ["sqrt(-1)","i"],
+                       ["2^(1/2)","1.414",0.001],
+                       ["sqrt(-d)","i*sqrt(d)"], // bug reported feb 2018
                        ["((1+i)/(sqrt 2))^8",1],
                        ["(1,2,3)==(1,2,3)",true],
                        ["(1,2,3)==(1,2,4)",false],
@@ -134,8 +137,13 @@ com.lightandmatter.Test =
               else {
                 diff = com.lightandmatter.Num.binop('-',rx,ry);
                 //document.getElementById("debug").innerHTML += 'diff='+diff+nn.num_type(diff);
-                if (typeof(diff)=='number') {diff=Math.abs(diff);} else {diff=diff.abs();}
-                unequal = nn.binop('>',diff,eps);
+                if (diff===null) {
+                  unequal=true;
+                }
+                else {
+                  if (typeof(diff)=='number') {diff=Math.abs(diff);} else {diff=diff.abs();}
+                  unequal = nn.binop('>',diff,eps);
+                }
               }
             }
             if (test[1]===null) {
