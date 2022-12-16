@@ -331,9 +331,9 @@ com.lightandmatter.LeviCivita =
       }
       if (c.s[0][0]!==0) {
         var p = c.s[0][0];
-        c.l += p;
+        c.l = c.nn.binop('+', c.l, p);
         for (var i=0; i<c.s.length; i++) {
-          c.s[i][0] -= p;
+          c.s[i][0] = c.nn.binop('-', c.s[i][0], p);
         }
       }
       //c.debug('in tidy() c.s[0][0]='+c.s[0][0]);
