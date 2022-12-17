@@ -27,10 +27,10 @@ com.lightandmatter.Rational =
     };
     c.mul = function (b) { return com.lightandmatter.Rational(c.x*b.x,c.y*b.y); };
     c.div = function (b) { if (b.x===0) {return NaN;} return com.lightandmatter.Rational(c.x*b.y,c.y*b.x); };
-    c.neg = function () { return com.lightandmatter.Rational(-c.x,c.y); };
+    c.neg = function (notidy=false) { return com.lightandmatter.Rational(-c.x,c.y, notidy); };
     c.abs = function () { return com.lightandmatter.Rational(Math.abs(c.x),c.y); };
     c.add = function (b) { return com.lightandmatter.Rational(c.x*b.y+b.x*c.y,c.y*b.y); };
-    c.sub = function (b) { return c.add(b.neg()); };
+    c.sub = function (b) { return c.add(b.neg(notidy=true)); };
 
     c.toString = function() {
       if (c.y==1) {return c.x.toString();}
