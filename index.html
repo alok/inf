@@ -1,5 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
+<link rel="stylesheet" href="style.css">
+<!-- <link rel="stylesheet" href="base.css"> -->
 <head><title>Inf -- a calculator that can handle infinite and infinitesimal numbers</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
@@ -11,7 +13,8 @@ Type an expression at the : prompt and hit Enter. For more documentation, scroll
 
 <div id="debug"></div>
 <div id="debug2"></div>
-<div id="terminal" style="width:100%; height:600px;"></div>
+<article class="col large_col" id="terminal_column" >
+<div class="sidebar_card" id="terminal" style="width:100%; height:600px;position:relative;"></div>
 
 
   <script src="Terminal.js"   type="text/javascript"></script>
@@ -34,6 +37,7 @@ Type an expression at the : prompt and hit Enter. For more documentation, scroll
           //return "Your input was "+parser.to_debug_string()+' -->> '+parser.toString();
           return parser.toString();
         }),
+        'input_style':"border-style:solid; background:#EEE;margin-top: 2px;width:90%;position:absolute;bottom:2%",
         'when_changed':(function(t) {
           // document.getElementById("debug").innerHTML="Debugging: "+lexer.toString();
           lexer.change_text(t);
@@ -45,9 +49,11 @@ Type an expression at the : prompt and hit Enter. For more documentation, scroll
       }
     }
   </script>
+</article>
 
 <!-- <div style="height:300px; overflow:auto; background : #d8e8ff;"> -->
-<div>
+<aside id="sidebar" class="col side_col">
+<div id="about_shell" class="sidebar_card">
 <h2>About Inf</h2>
 
 <h3>Basic use</h3>
@@ -225,6 +231,7 @@ URL. Alternatively, you can access it via a web browser or git, at <a href="http
 <a href="?test">This link</a> runs a test suite in your browser.
 </p>
 </div>
+</aside>
 
 </body>
 </html>
