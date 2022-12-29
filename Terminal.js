@@ -73,12 +73,13 @@ com.lightandmatter.Terminal =
     this.when_changed = function() {};
     if ('when_changed' in args) {this.when_changed = args.when_changed;}
 
-    var scroll_div = document.createElement("div");
-    scroll_div.setAttribute("style","width:100%; height:100%; overflow:auto"); // width is required in order to get the scrollbar
     this.terminal_div = document.createElement("div");
-    scroll_div.appendChild(this.terminal_div);
+    this.terminal_div.setAttribute("style", "width:100%; height:90%; overflow:auto")
+    var bottom = document.createElement("div");
+    this.terminal_div.appendChild(bottom);
+    
     var form = document.createElement("form");
-    scroll_div.appendChild(form);
+    form.setAttribute("style","position:absolute;bottom:2%;border-style:solid;border-left-width: -;border-right-width: -;border-right-width: 0px;border-left-width: 0px;border-bottom-width: 0px;border-top-width: 1px;padding-top:2%")
     var prompt_span = document.createElement("span");
     prompt_span.innerHTML = this.prompt;
     form.appendChild(prompt_span);
@@ -87,9 +88,9 @@ com.lightandmatter.Terminal =
     inp.setAttribute("size",String(this.input_width));
     inp.setAttribute("style",this.style+this.input_style);
     form.appendChild(inp);
-    var bottom = document.createElement("div");
-    form.appendChild(bottom);
-    this.container.appendChild(scroll_div);
+    
+    this.container.appendChild(this.terminal_div);
+    this.container.appendChild(form)
 
     var terminal = ''; // private data; a string holding the contents of the simulated terminal window
     this.terminal_div.innerHTML = terminal;
@@ -139,7 +140,8 @@ com.lightandmatter.Terminal =
                     '<span style="' + t.style + t.above_style + '">' + t.response(t) + "</span><br/>";
         this.value=''; // clear input field
         t.terminal_div.innerHTML = terminal;
-        bottom.scrollIntoView(false);
+        t.terminal_div.appendChild(bottom)
+        bottom.scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"});
       }
       return (!(code==enter || go_up || go_down)); // in these three cases, prevent the browser from doing other things, e.g., printing if we do control-p
     };
