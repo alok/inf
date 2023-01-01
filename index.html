@@ -30,8 +30,9 @@ Type an expression at the : prompt and hit Enter. For more documentation, scroll
       var lexer = new com.lightandmatter.Lexer({});
       var parser = new com.lightandmatter.Parser({});
       var terminal = new com.lightandmatter.Terminal({
-        'container':document.getElementById("terminal"),
-        'prompt':': ',
+        'container': document.getElementById("terminal"),
+        'prompt_count': 0,
+        'prompt':'[ ]: ',
         'response':(function(terminal) {
           parser.parse(lexer.tokens,lexer.props);
           //return "Your input was "+parser.to_debug_string()+' -->> '+parser.toString();

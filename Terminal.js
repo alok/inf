@@ -60,6 +60,8 @@ com.lightandmatter.Terminal =
     this.container = args.container;
     this.response = function(terminal) {return "";};
     if ('response' in args) {this.response = args.response;}
+    this.prompt_count = 0;
+    if ('prompt_count' in args) {this.prompt_count = args.prompt_count}
     this.prompt = '&gt; ';
     if ('prompt' in args) {this.prompt = args.prompt;}
     this.input_width = 100;
@@ -134,13 +136,19 @@ com.lightandmatter.Terminal =
         u = u.replace(new RegExp("<","g"),"&lt;");
         t.input = u;
         t.history.push(u);
+        t.prompt_count ++;
+        t.prompt = "["+ t.prompt_count +"]: "
         t.in_history = t.history.length;
+        t.output = t.response(t)
+        if (t.input === '') {t.output = '';}
         terminal =   terminal +
-                    '<span style="' + t.style + t.above_style + '">' + t.prompt + " " +  u + "</span><br/>"  +
-                    '<span style="' + t.style + t.above_style + '">' + t.response(t) + "</span><br/>";
+                    '<span style="color:#307fc1;opacity:0.5;' + t.style + t.above_style + '">' + t.prompt + " " + '</span>' + 
+                    '<span style="' + t.style + t.above_style + '">' +  u + "</span><br/>"  +
+                    '<span style="color:#bf5d3d;opacity:0.5;' + t.style + t.above_style + '">' + t.prompt + "</span>" +
+                    '<span style="' + t.style + t.above_style + '">' + t.output + "</span><br/><br/>";
         this.value=''; // clear input field
         t.terminal_div.innerHTML = terminal;
-        t.terminal_div.appendChild(bottom)
+        t.terminal_div.appendChild(bottom);
         bottom.scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"});
       }
       return (!(code==enter || go_up || go_down)); // in these three cases, prevent the browser from doing other things, e.g., printing if we do control-p
