@@ -28,7 +28,7 @@ h3 {
 }
 
 a {
-    -moz-outline: none;
+    outline: none;
 }
 
 body {
@@ -237,17 +237,21 @@ ul.list li .item .avatar {
     align-self: center;
 }
 
+.large_col {
+    width: 100%;
+}
+
 #sidebar {
     float: left;
 }
 
-@media (min-width : 768px) {
+@media screen and (min-width : 768px) {
     .large_col {
-        width: 55%;
+        width: 60%;
     }
 
     .side_col {
-        width: 35%;
+        width: 30%;
         margin-left: 5%
     }
 

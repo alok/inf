@@ -81,7 +81,7 @@ com.lightandmatter.Terminal =
     this.terminal_div.appendChild(bottom);
 
     var form = document.createElement("form");
-    form.setAttribute("style", "position:absolute;bottom:2%;border-style:solid;border-left-width: -;border-right-width: -;border-right-width: 0px;border-left-width: 0px;border-bottom-width: 0px;border-top-width: 1px;padding-top:2%")
+    form.setAttribute("style", "position:absolute;bottom:2%;border-style:solid;border-right-width: 0px;border-left-width: 0px;border-bottom-width: 0px;border-top-width: 1px;padding-top:2%")
     var prompt_span = document.createElement("span");
     prompt_span.innerHTML = this.prompt;
     form.appendChild(prompt_span);
