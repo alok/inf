@@ -52,44 +52,47 @@
 //   If style includes color, does that work? Maybe not, need to apply that style to the whole hierarchy of divs.
 
 var com;
-if (!com) {com = {};}
-if (!com.lightandmatter) {com.lightandmatter = {};}
+if (!com) { com = {}; }
+if (!com.lightandmatter) { com.lightandmatter = {}; }
 
 com.lightandmatter.Terminal =
   function (args) {
     this.container = args.container;
-    this.response = function(terminal) {return "";};
-    if ('response' in args) {this.response = args.response;}
+    this.response = function (terminal) { return ""; };
+    if ('response' in args) { this.response = args.response; }
+    this.prompt_count = 0;
+    if ('prompt_count' in args) { this.prompt_count = args.prompt_count }
     this.prompt = '&gt; ';
-    if ('prompt' in args) {this.prompt = args.prompt;}
+    if ('prompt' in args) { this.prompt = args.prompt; }
     this.input_width = 100;
-    if ('input_width' in args) {this.input_width = args.input_width;}
+    if ('input_width' in args) { this.input_width = args.input_width; }
     this.style = "font-family:serif;";
-    if ('style' in args) {this.style = args.style;}
+    if ('style' in args) { this.style = args.style; }
     this.input_style = "border-style:none;";
-    if ('input_style' in args) {this.input_style = args.input_style;}
+    if ('input_style' in args) { this.input_style = args.input_style; }
     this.above_style = "";
-    if ('above_style' in args) {this.above_style = args.above_style;}
-    this.when_changed = function() {};
-    if ('when_changed' in args) {this.when_changed = args.when_changed;}
+    if ('above_style' in args) { this.above_style = args.above_style; }
+    this.when_changed = function () { };
+    if ('when_changed' in args) { this.when_changed = args.when_changed; }
 
-    var scroll_div = document.createElement("div");
-    scroll_div.setAttribute("style","width:100%; height:100%; overflow:auto"); // width is required in order to get the scrollbar
     this.terminal_div = document.createElement("div");
-    scroll_div.appendChild(this.terminal_div);
+    this.terminal_div.setAttribute("style", "width:100%; height:68%; overflow:auto")
+    var bottom = document.createElement("div");
+    this.terminal_div.appendChild(bottom);
+
     var form = document.createElement("form");
-    scroll_div.appendChild(form);
+    form.setAttribute("style", "position:absolute;bottom:2%;border-style:solid;border-right-width: 0px;border-left-width: 0px;border-bottom-width: 0px;border-top-width: 1px;padding-top:2%")
     var prompt_span = document.createElement("span");
     prompt_span.innerHTML = this.prompt;
     form.appendChild(prompt_span);
     var inp = document.createElement("input");
-    inp.setAttribute("type","text");
-    inp.setAttribute("size",String(this.input_width));
-    inp.setAttribute("style",this.style+this.input_style);
+    inp.setAttribute("type", "text");
+    inp.setAttribute("size", String(this.input_width));
+    inp.setAttribute("style", this.style + this.input_style);
     form.appendChild(inp);
-    var bottom = document.createElement("div");
-    form.appendChild(bottom);
-    this.container.appendChild(scroll_div);
+
+    this.container.appendChild(this.terminal_div);
+    this.container.appendChild(form)
 
     var terminal = ''; // private data; a string holding the contents of the simulated terminal window
     this.terminal_div.innerHTML = terminal;
@@ -99,7 +102,7 @@ com.lightandmatter.Terminal =
     this.in_history = 0;
 
     var t = this; // In the event-handler, "this" means the inp object, not the Terminal, so provide this closure.
-    inp.onkeypress = function(e) {
+    inp.onkeypress = function (e) {
 
       var code = 0;
 
@@ -107,47 +110,54 @@ com.lightandmatter.Terminal =
         e = window.event;
       }
       // IE has keyCode, Firefox has charCode
-      try { code = e.charCode; } catch (foo) {}
-      try { code = e.keyCode;  } catch (foo) {}
-      if (code==0) {try { code = e.which;  } catch (foo) {}} // necessary for ctl keys in FF
+      try { code = e.charCode; } catch (foo) { }
+      try { code = e.keyCode; } catch (foo) { }
+      if (code == 0) { try { code = e.which; } catch (foo) { } } // necessary for ctl keys in FF
       var special = false;
-      try {special=(e.which!==undefined && e.which===0)} catch (foo) {}
+      try { special = (e.which !== undefined && e.which === 0) } catch (foo) { }
       var enter = 13; // unicode for enter key
       // Most browsers don't generate a keypress for arrow keys. Firefox does.
       var up_arrow = 38;
       var down_arrow = 40;
       var ch = String.fromCharCode(code);
-      var go_up = special && ((e.ctrlKey && ch=='p') || (code==up_arrow));
-      var go_down = special && ((e.ctrlKey && ch=='n') || (code==down_arrow));
+      var go_up = special && ((e.ctrlKey && ch == 'p') || (code == up_arrow));
+      var go_down = special && ((e.ctrlKey && ch == 'n') || (code == down_arrow));
       if (go_up || go_down) {
-        if (go_up) {t.in_history --;}
-        if (go_down) {t.in_history ++;}
-        if (t.in_history<0) {t.in_history=0;}
-        if (t.in_history>t.history.length) {t.in_history=t.history.length;}
-        if (t.in_history<t.history.length) {this.value = t.history[t.in_history];}
-        if (t.in_history==t.history.length) {this.value = '';}
+        if (go_up) { t.in_history--; }
+        if (go_down) { t.in_history++; }
+        if (t.in_history < 0) { t.in_history = 0; }
+        if (t.in_history > t.history.length) { t.in_history = t.history.length; }
+        if (t.in_history < t.history.length) { this.value = t.history[t.in_history]; }
+        if (t.in_history == t.history.length) { this.value = ''; }
       }
       t.when_changed(this.value);
-      if (code==enter) {
+      if (code == enter) {
         var u = this.value;  // user's input, not including the most recent character
-        u = u.replace(new RegExp("<","g"),"&lt;");
+        u = u.replace(new RegExp("<", "g"), "&lt;");
         t.input = u;
         t.history.push(u);
+        t.prompt_count++;
+        t.prompt = "[" + t.prompt_count + "]: "
         t.in_history = t.history.length;
-        terminal =   terminal +
-                    '<span style="' + t.style + t.above_style + '">' + t.prompt + " " +  u + "</span><br/>"  +
-                    '<span style="' + t.style + t.above_style + '">' + t.response(t) + "</span><br/>";
-        this.value=''; // clear input field
+        t.output = t.response(t)
+        if (t.input === '') { t.output = ''; }
+        terminal = terminal +
+          '<span style="color:#307fc1;opacity:0.5;' + t.style + t.above_style + '">' + t.prompt + " " + '</span>' +
+          '<span style="' + t.style + t.above_style + '">' + u + "</span><br/>" +
+          '<span style="color:#bf5d3d;opacity:0.5;' + t.style + t.above_style + '">' + t.prompt + "</span>" +
+          '<span style="' + t.style + t.above_style + '">' + t.output + "</span><br/><br/>";
+        this.value = ''; // clear input field
         t.terminal_div.innerHTML = terminal;
-        bottom.scrollIntoView(false);
+        t.terminal_div.appendChild(bottom);
+        bottom.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
       }
-      return (!(code==enter || go_up || go_down)); // in these three cases, prevent the browser from doing other things, e.g., printing if we do control-p
+      return (!(code == enter || go_up || go_down)); // in these three cases, prevent the browser from doing other things, e.g., printing if we do control-p
     };
-    inp.onkeyup = function(e) {
+    inp.onkeyup = function (e) {
       t.when_changed(this.value);
     };
     inp.focus();
     function debug(s) {
-      document.getElementById("debug").innerHTML=document.getElementById("debug").innerHTML+' '+s+' ';
+      document.getElementById("debug").innerHTML = document.getElementById("debug").innerHTML + ' ' + s + ' ';
     };
   };
