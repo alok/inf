@@ -76,7 +76,7 @@ com.lightandmatter.Terminal =
     if ('when_changed' in args) { this.when_changed = args.when_changed; }
 
     this.terminal_div = document.createElement("div");
-    this.terminal_div.setAttribute("style", "width:100%; height:65%; overflow:auto;")
+    this.terminal_div.setAttribute("style", "width:100%; height:69%; overflow:auto;")
     var bottom = document.createElement("div");
     this.terminal_div.appendChild(bottom);
 
