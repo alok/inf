@@ -223,3 +223,5 @@ com.lightandmatter.Num.debug = function(s) {
     };
 
 com.lightandmatter.Num.precision = 5; // number of digits of precision to maintain on output
+
+

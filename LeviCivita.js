@@ -177,8 +177,8 @@ com.lightandmatter.LeviCivita =
     };
     c.inv = function() {
       var z = c.clone();
-      z.f = c.nn.binop('/',1,z.f);
-      z.l = c.nn.binop('-',0,z.l);
+      z.f = c.nn.binop('/',1,z.f); // invert front
+      z.l = c.nn.binop('-',0,z.l);//negate
       z.s = [[0,1]];
       // reduce it to inverting 1/(1-e):
       return c.nn.binop('*',z,c.eps_part().neg().expand(com.lightandmatter.LeviCivita.taylor.inv));
